@@ -5,6 +5,8 @@ const path = require("path");
 const cors = require("cors");
 const multer = require("multer");
 
+require("dotenv").config();
+
 const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -51,26 +53,30 @@ app.post("/byUrl", (req, res, next) => {
     res.json({
       success: 1,
       file: {
-        url: `http://localhost:4000/uploaded/${name}.jpg`,
+        url: `/uploaded/${name}.jpg`,
         // ... and any additional fields you want to store, such as width, height, color, extension, etc
       },
     });
   });
 });
 
-app.post("/byFile", upload.single("image"), function (req, res, next) {
-  // req.file is the `image` file
-  // req.body will hold the text fields, if there were any
-  res.json({
-    success: 1,
-    file: {
-      url: `http://localhost:4000/uploaded/${req.file.filename}`,
-      // ... and any additional fields you want to store, such as width, height, color, extension, etc
-    },
-  });
-});
+app.post(
+  `${process.env.HOST}/byFile`,
+  upload.single("image"),
+  function (req, res, next) {
+    // req.file is the `image` file
+    // req.body will hold the text fields, if there were any
+    res.json({
+      success: 1,
+      file: {
+        url: `${process.env.HOST}/uploaded/${req.file.filename}`,
+        // ... and any additional fields you want to store, such as width, height, color, extension, etc
+      },
+    });
+  }
+);
 
-app.use("/uploaded", express.static("uploaded"));
+app.use(`${process.env.HOST}/uploaded`, express.static("uploaded"));
 
 app.listen(port, () => {
   console.log(`server is running on port ${port}}`);
