@@ -13,7 +13,8 @@ const corsOptions = {
 const app = express();
 const port = process.env.PORT || 4000;
 
-const uploadFolder = path.join(__dirname, "uploaded");
+// const uploadFolder = path.join(__dirname, "uploaded");
+const uploadFolder = "uploaded/";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
