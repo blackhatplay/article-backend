@@ -1,7 +1,7 @@
 const express = require("express");
 const download = require("download-file");
 const bodyParser = require("body-parser");
-const path = require("path");
+const fs = require("fs");
 const cors = require("cors");
 const multer = require("multer");
 
@@ -36,7 +36,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.json({ msg: "test" });
+  fs.readdir(uploadFolder, (err, files) => {
+    const filesName = [];
+    files.forEach((file) => {
+      filesName.push(file);
+    });
+
+    res.json({ uploaded: filesName });
+  });
 });
 
 app.post("/byUrl", (req, res, next) => {
