@@ -1,8 +1,18 @@
 const express = require("express");
 const multer = require("multer");
-const firebaseConfig = require("../config/firebaseConfig");
+// const firebaseConfig = require("../config/firebaseConfig");
 const firebase = require("firebase/app");
 const axios = require("axios");
+
+const firebaseConfig = {
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId,
+  measurementId: process.env.measurementId,
+};
 
 const router = express.Router();
 firebase.initializeApp(firebaseConfig);
