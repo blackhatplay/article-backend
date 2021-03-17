@@ -4,6 +4,7 @@ const multer = require("multer");
 const firebase = require("firebase/app");
 const axios = require("axios");
 
+require("dotenv").config();
 const firebaseConfig = {
   apiKey: process.env.apiKey,
   authDomain: process.env.authDomain,
@@ -18,8 +19,6 @@ const router = express.Router();
 firebase.initializeApp(firebaseConfig);
 
 var upload = multer();
-
-require("dotenv").config();
 
 router.post("/byUrl", async (req, res, next) => {
   const storageRef = firebase.storage().ref();
