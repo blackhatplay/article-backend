@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const firebaseConfig = require("../firebaseConfig");
+const firebaseConfig = require("../config/firebaseConfig");
 const firebase = require("firebase/app");
 const axios = require("axios");
 
