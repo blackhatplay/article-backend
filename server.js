@@ -22,8 +22,6 @@ mongoose
 
 require("firebase/storage");
 
-require("dotenv").config();
-
 const app = express();
 
 const corsOptions = {

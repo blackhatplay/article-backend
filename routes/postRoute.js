@@ -1,7 +1,6 @@
 const express = require("express");
 const Article = require("../models/Article");
 const URLSlugify = require("url-slugify");
-
 const urlSlugify = new URLSlugify();
 
 const router = express.Router();
