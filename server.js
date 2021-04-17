@@ -12,6 +12,7 @@ const uploadedRoute = require("./routes/uploadedRoute");
 const postRoute = require("./routes/postRoute");
 const authRoute = require("./routes/authRoute");
 const profileRoute = require("./routes/profileRoute");
+const { default: axios } = require("axios");
 
 require("dotenv").config();
 
@@ -72,6 +73,12 @@ app.use("/api/profile", profileRoute);
 app.use("/", (req, res) => {
   res.sendStatus(404);
 });
+
+setInterval(() => {
+  axios.get("https://article-ping.glitch.me").then((res) => {
+    console.log(res.data);
+  });
+}, 280000);
 
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
