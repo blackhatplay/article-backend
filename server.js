@@ -74,11 +74,11 @@ app.use("/", (req, res) => {
   res.sendStatus(404);
 });
 
-setInterval(() => {
-  axios.get("https://article-ping.glitch.me").then((res) => {
-    console.log(res.data);
-  });
-}, 280000);
+// setInterval(() => {
+//   axios.get("https://article-ping.glitch.me").then((res) => {
+//     console.log(res.data);
+//   });
+// }, 280000);
 
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
