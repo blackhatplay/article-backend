@@ -5,6 +5,7 @@ const firebase = require("firebase/app");
 const axios = require("axios");
 
 require("dotenv").config();
+require("firebase/storage");
 const firebaseConfig = {
   apiKey: process.env.apiKey,
   authDomain: process.env.authDomain,

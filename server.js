@@ -4,10 +4,14 @@ const bodyParser = require("body-parser");
 global.XMLHttpRequest = require("xhr2");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 const uploadRoute = require("./routes/uploadRoute");
 const uploadedRoute = require("./routes/uploadedRoute");
 const postRoute = require("./routes/postRoute");
+const authRoute = require("./routes/authRoute");
+const profileRoute = require("./routes/profileRoute");
 
 require("dotenv").config();
 
@@ -20,36 +24,55 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
-require("firebase/storage");
-
 const app = express();
 
-const corsOptions = {
-  origin: process.env.ORIGIN,
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+app.use(morgan("dev"));
+
+// const corsOptions = {
+//   origin: process.env.ORIGIN,
+//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+
+var allowlist = process.env.ORIGIN.split(",");
+
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header("Origin")) !== -1) {
+    corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false }; // disable CORS for this request
+  }
+  callback(null, corsOptions); // callback expects two parameters: error and options
 };
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptionsDelegate));
 
 // const uploadFolder = path.join(__dirname, "uploaded");
 
 // var upload = multer({ storage: storage });
+app.use(cookieParser());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.json("success");
 });
+app.get("/api", (req, res) => {
+  res.json("success");
+});
 
-app.use("/upload", uploadRoute);
+app.use("/api/upload", uploadRoute);
 
-app.use(`/uploaded`, uploadedRoute);
-app.use(`/post`, postRoute);
+app.use(`/api/uploaded`, uploadedRoute);
+app.use("/api/post", postRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/profile", profileRoute);
 
 app.use("/", (req, res) => {
   res.sendStatus(404);
 });
 
 app.listen(port, () => {
-  console.log(`server is running on port ${port}}`);
+  console.log(`server is running on port ${port}`);
 });
