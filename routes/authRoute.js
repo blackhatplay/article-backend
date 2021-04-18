@@ -92,7 +92,7 @@ router.post("/login", (req, res) => {
   const { errors, isValid } = loginValidate(req.body);
 
   if (!isValid) {
-    return res.status(400).json({ errors });
+    return res.status(400).json(errors);
   }
 
   User.findOne({ username: req.body.user }).then((user) => {
