@@ -21,7 +21,7 @@ module.exports = (user) => {
         to: user.email,
         from: "blackhatbud@gmail.com", // Use the email address or domain you verified above
         subject: "Email confirmation",
-        html: emailTemplate(`${confirmationUrl}/${token}`),
+        html: emailTemplate(`${confirmationUrl}?token=${token}`),
       };
 
       sgMail.send(msg).then(

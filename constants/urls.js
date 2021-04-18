@@ -1,3 +1,3 @@
 module.exports = {
-  confirmationUrl: `${process.env.HOST}/auth/confirmation`,
+  confirmationUrl: `${process.env.EMAIL_ORIGIN}/confirmation`,
 };

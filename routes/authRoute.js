@@ -64,19 +64,21 @@ router.get("/confirmation/:token", (req, res) => {
   const token = req.params.token;
 
   jwt.verify(token, process.env.email_secret, (err, payload) => {
-    if (err) return res.send("invalid link");
+    if (err) return res.status(400).json({ message: "invalid link" });
 
     User.findOne({ email: payload.email }).then((user) => {
       if (!user)
         return res
           .status(404)
           .json({ message: "user not found with this email" });
-
+      if (user.confirmed) {
+        return res.status(400).json({ message: "Email already confirmed" });
+      }
       user.confirmed = true;
 
       user
         .save()
-        .then((user) => res.send("email confirmed"))
+        .then((user) => res.send({ message: "email confirmed" }))
         .catch((err) => console.log(err));
     });
   });
@@ -98,7 +100,11 @@ router.post("/login", (req, res) => {
       bcrypt.compare(req.body.password, user.password).then((isMatch) => {
         if (isMatch) {
           if (!user.confirmed) {
-            res.status(401).json({ success: false, verified: false });
+            res.status(401).json({
+              success: false,
+              verified: false,
+              message: "Email confirmation sent! Please verify email.",
+            });
             sendEmail(user);
           } else {
             const payload = {
@@ -137,7 +143,11 @@ router.post("/login", (req, res) => {
           bcrypt.compare(req.body.password, user.password).then((isMatch) => {
             if (isMatch) {
               if (!user.confirmed) {
-                res.status(401).json({ success: false, verified: false });
+                res.status(401).json({
+                  success: false,
+                  verified: false,
+                  message: "Email confirmation sent! Please verify email.",
+                });
                 sendEmail(user);
               } else {
                 const payload = {
