@@ -9,6 +9,7 @@ const registerValidate = require("../validations/register");
 const resetPasswordValidate = require("../validations/resetPassword");
 const loginValidate = require("../validations/login");
 const sendEmail = require("../utils/sendEmail");
+const sendResetEmail = require("../utils/sendResetEmail");
 const { parseCookies, setCookie, destroyCookie } = require("nookies");
 
 router.post("/register", (req, res) => {
@@ -208,8 +209,9 @@ router.post("/forgot-password", (req, res) => {
       (err, token) => {
         if (err) return console.log(err);
 
+        sendResetEmail({ email, token });
         res.json({
-          token,
+          // token,
           message: "Password reset link sent to email",
           success: true,
         });
@@ -218,8 +220,8 @@ router.post("/forgot-password", (req, res) => {
   });
 });
 
-router.post("/verifyForgotToken", (req, res) => {
-  const token = req.body.token;
+router.post("/verifyForgotToken/:token", (req, res) => {
+  const token = req.params.token;
 
   if (!token)
     return res
@@ -236,10 +238,10 @@ router.post("/verifyForgotToken", (req, res) => {
   });
 });
 
-router.post("/reset-password", (req, res) => {
-  const authHeader = req.headers["authorization"];
+//Token should only work for one reset
 
-  const token = authHeader && authHeader.split(" ")[1];
+router.post("/reset-password/:token", (req, res) => {
+  const token = req.params.token;
 
   if (!token)
     return res

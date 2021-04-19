@@ -59,6 +59,17 @@ router.get("/all", (req, res) => {
     res.json(articles);
   });
 });
+
+router.get("/all/paths", (req, res) => {
+  Article.find({}, { urlId: 1 }).then((articles) => {
+    if (!articles) {
+      return res.status(404).json({ message: "no article found" });
+    }
+
+    res.json(articles);
+  });
+});
+
 router.get("/user", authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
