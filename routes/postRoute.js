@@ -3,7 +3,6 @@ const URLSlugify = require("url-slugify");
 const Article = require("../models/Article");
 const authenticateJWT = require("../utils/authenticateJWT");
 const jwt = require("jsonwebtoken");
-const { default: axios } = require("axios");
 const urlSlugify = new URLSlugify();
 
 const router = express.Router();
@@ -43,12 +42,7 @@ router.post("/edit", authenticateJWT, (req, res, next) => {
       console.log("pp");
       article
         .save()
-        .then((article) => {
-          axios
-            .get(`${process.env.EMAIL_ORIGIN}/${article.urlId}`)
-            .then((data) => res.json(article))
-            .catch((err) => console.log(err));
-        })
+        .then((article) => res.json(article))
         .catch((err) => console.log(err));
     } else {
       res.status(401).json({ message: "you are not the creator" });
