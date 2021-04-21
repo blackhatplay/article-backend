@@ -80,4 +80,36 @@ router.post(`/byFile`, upload.single("image"), function (req, res, next) {
     .catch((err) => console.log(err));
 });
 
+router.post(`/test`, upload.single("image"), function (req, res, next) {
+  const storageRef = firebase.storage().ref();
+  // req.file is the `image` file
+  // req.body will hold the text fields, if there were any
+
+  const metadata = {
+    contentType: `image/jpeg`,
+  };
+
+  // res.json({ file: "pp" });
+
+  // const names = req.file.originalname.split(".");
+
+  const imagesRef = storageRef.child(`avatars/me.png`);
+
+  const buffer = Buffer.from(req.body.avatar.split(",")[1], "base64");
+
+  imagesRef
+    .put(buffer, metadata)
+    .then((snapshot) => {
+      res.json({
+        success: 1,
+        file: {
+          url: `https://firebasestorage.googleapis.com/v0/b/${snapshot._delegate.metadata.bucket}/o/avatars%2F${snapshot._delegate.metadata.name}?alt=media`,
+          //https://firebasestorage.googleapis.com/v0/b/articles-c8ae7.appspot.com/o/images%2F12345.jpg?alt=media
+          // ... and any additional fields you want to store, such as width, height, color, extension, etc
+        },
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
 module.exports = router;

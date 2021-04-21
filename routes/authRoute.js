@@ -11,6 +11,7 @@ const loginValidate = require("../validations/login");
 const sendEmail = require("../utils/sendEmail");
 const sendResetEmail = require("../utils/sendResetEmail");
 const { parseCookies, setCookie, destroyCookie } = require("nookies");
+const authenticateJWT = require("../utils/authenticateJWT");
 
 router.post("/register", (req, res) => {
   const { errors, isValid } = registerValidate(req.body);
@@ -282,6 +283,11 @@ router.post("/reset-password/:token", (req, res) => {
       });
     });
   });
+});
+
+router.get("/user", authenticateJWT, (req, res) => {
+  console.log(req.user);
+  res.json(req.user);
 });
 
 module.exports = router;
